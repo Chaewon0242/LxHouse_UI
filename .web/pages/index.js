@@ -2,12 +2,12 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import { connect, E, getRefValue, isTrue, preventDefault, processEvent, refs, set_val, uploadFiles } from "/utils/state"
 import "focus-visible/dist/focus-visible"
-import { Box, Button, ButtonGroup, Center, Divider, Flex, Grid, GridItem, Image, Input, Spacer, Text, useColorMode, VStack } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Center, Divider, Flex, Grid, GridItem, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spacer, Text, useColorMode, VStack } from "@chakra-ui/react"
 import NextHead from "next/head"
 
 
 export default function Component() {
-  const [state, setState] = useState({"is_hydrated": false, "events": [{"name": "state.hydrate"}], "files": []})
+  const [state, setState] = useState({"is_hydrated": false, "show": false, "events": [{"name": "state.hydrate"}], "files": []})
   const [result, setResult] = useState({"state": null, "events": [], "final": true, "processing": false})
   const [notConnected, setNotConnected] = useState(false)
   const router = useRouter()
@@ -106,15 +106,32 @@ export default function Component() {
 </ButtonGroup>
   <Spacer/>
   <ButtonGroup>
-  <Button sx={{"bg": "#141723", "paddingLeft": "0px", "paddingRight": "0px", "height": "32px", "_hover": {"bg": "#141723"}}}>
+  <Button onClick={_e => Event([E("state.change", {})], _e)} sx={{"bg": "#141723", "paddingLeft": "0px", "paddingRight": "0px", "height": "32px", "_hover": {"bg": "#141723"}}}>
   <Image src="btn_setting_32.png"/>
 </Button>
+  <Modal isOpen={state.show}>
+  <ModalOverlay>
+  <ModalContent>
+  <ModalHeader>
+  {`설정`}
+</ModalHeader>
+  <ModalBody>
+  {`aaaaaaaaaa`}
+</ModalBody>
+  <ModalFooter>
+  <Button onClick={_e => Event([E("state.change", {})], _e)}>
+  {`취소`}
+</Button>
+</ModalFooter>
+</ModalContent>
+</ModalOverlay>
+</Modal>
   <Button sx={{"bg": "#141723", "paddingLeft": "0px", "paddingRight": "0px", "height": "32px", "_hover": {"bg": "#141723"}}}>
   <Image src="btn_exit_32.png"/>
 </Button>
 </ButtonGroup>
 </Flex>
-  <Grid sx={{"width": "100%", "gap": 0}} templateColumns="repeat(15, 1fr)">
+  <Grid sx={{"width": "100%", "marginBottom": "10px", "gap": 0}} templateColumns="repeat(15, 1fr)">
   <GridItem colSpan={9}>
   <Box>
   <Box sx={{"height": "470px"}}>
@@ -148,30 +165,30 @@ export default function Component() {
 </Box>
   <Flex sx={{"width": "100%"}}>
   <Center sx={{"width": "50%"}}>
-  <Text sx={{"fontSize": "13px"}}>
+  <Text sx={{"fontSize": "13px", "marginRight": "10px"}}>
   {`X`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "bg": "#3D4056", "textAlign": "right", "marginLeft": "10px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "height": "36px", "bg": "#3D4056", "textAlign": "right"}} type="number"/>
 </Center>
   <Center sx={{"width": "50%"}}>
-  <Text sx={{"fontSize": "13px"}}>
+  <Text sx={{"fontSize": "13px", "marginRight": "10px"}}>
   {`W`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "bg": "#3D4056", "textAlign": "right", "marginLeft": "10px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "height": "36px", "bg": "#3D4056", "textAlign": "right"}} type="number"/>
 </Center>
 </Flex>
   <Flex sx={{"width": "100%"}}>
   <Center sx={{"width": "50%"}}>
-  <Text sx={{"fontSize": "13px"}}>
+  <Text sx={{"fontSize": "13px", "marginRight": "10px"}}>
   {`Y`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "bg": "#3D4056", "textAlign": "right", "marginLeft": "10px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "height": "36px", "bg": "#3D4056", "textAlign": "right"}} type="number"/>
 </Center>
   <Center sx={{"width": "50%"}}>
-  <Text sx={{"fontSize": "13px"}}>
+  <Text sx={{"fontSize": "13px", "marginRight": "10px"}}>
   {`D`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "bg": "#3D4056", "textAlign": "right", "marginLeft": "10px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" isRequired={true} placeholder="0" sx={{"borderColor": "#E3E3E3", "width": "120px", "height": "36px", "bg": "#3D4056", "textAlign": "right"}} type="number"/>
 </Center>
 </Flex>
   <Center>
@@ -181,7 +198,7 @@ export default function Component() {
 </Center>
 </VStack>
   <Divider sx={{"borderColor": "#707289", "boxShadow": "0px 2px 1px #000", "marginTop": "5px", "marginBottom": "5px"}}/>
-  <Flex sx={{"width": "100%", "marginTop": "5px"}}>
+  <Flex sx={{"tyle": {"width": "100%", "marginTop": "5px"}}}>
   <Box sx={{"width": "33%", "paddingLeft": "5px", "paddingRight": "5px", "paddingBottom": "5px"}}>
   <VStack>
   <Text>
@@ -191,19 +208,19 @@ export default function Component() {
   <Text sx={{"fontSize": "13px"}}>
   {`L`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
 </Center>
   <Center>
   <Text sx={{"fontSize": "13px"}}>
   {`a`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
 </Center>
   <Center>
   <Text sx={{"fontSize": "13px"}}>
   {`b`}
 </Text>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
 </Center>
 </VStack>
 </Box>
@@ -213,42 +230,42 @@ export default function Component() {
   {`After Calibration`}
 </Text>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
 </Center>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
 </Center>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
 </Center>
 </VStack>
 </Box>
-  <Box sx={{"width": "35%", "bg": "#DEDEDE", "borderRadius": "4px", "color": "#000", "paddingRight": "5px", "paddingBottom": "5px"}}>
+  <Box sx={{"bg": "#DEDEDE", "borderRadius": "4px", "color": "#000", "paddingRight": "5px", "paddingBottom": "5px", "width": "35%"}}>
   <VStack>
   <Text>
   {`Delta LabE`}
 </Text>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
-  <Text sx={{"fontSize": "13px", "fontWeight": "600"}}>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
+  <Text sx={{"fontSize": "13px"}}>
   {`ΔL`}
 </Text>
 </Center>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
-  <Text sx={{"fontSize": "13px", "fontWeight": "600"}}>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
+  <Text sx={{"fontSize": "13px"}}>
   {`Δa`}
 </Text>
 </Center>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
-  <Text sx={{"fontSize": "13px", "fontWeight": "600"}}>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
+  <Text sx={{"fontSize": "13px"}}>
   {`Δb`}
 </Text>
 </Center>
   <Center>
-  <Input errorBorderColor="#FE2C55" focusBorderColor="#0276F9" placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px", "height": "36px"}} type="number"/>
-  <Text sx={{"fontSize": "13px", "fontWeight": "600"}}>
+  <Input errorBorderColor="#FE2C55" focusBorderColor="#2E3040" isReadOnly={true} placeholder="0" sx={{"borderColor": "#2E3040", "bg": "#121424", "height": "36px", "textAlign": "right", "marginLeft": "5px", "marginRight": "5px"}} type="number"/>
+  <Text sx={{"fontSize": "13px"}}>
   {`ΔE`}
 </Text>
 </Center>

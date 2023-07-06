@@ -30,7 +30,24 @@ txt_indi_camera     = "CAMERA"
 txt_indi_plc        = "PLC"
 txt_btn_start       = "START"
 txt_btn_stop        = "STOP"
-txt_trigger_interval = "Trigger Interval"
+txt_trigger_interval    = "Trigger Interval"
+txt_sec                 = "초"
+txt_roi                 = "검사영역 ROI"
+txt_x                   = "X"
+txt_y                   = "Y"
+txt_w                   = "W"
+txt_d                   = "D"
+txt_L                   = "L"
+txt_a                   = "a"
+txt_b                   = "b"
+txt_delta_L             = "ΔL"
+txt_delta_a             = "Δa"
+txt_delta_b             = "Δb"
+txt_delta_E             = "ΔE"
+txt_btn_apply           = "적용"
+txt_cielab              = "이미지 CIELab"
+txt_after_calibration   = "After Calibration"
+txt_delta_labe          = "Delta LabE"
 
 # Main Style
 ## initialization
@@ -77,6 +94,13 @@ st_bottom_right_box = {
 }
 
 # Sub Style
+## Divider(구분선)
+st_divider = {
+    "border_color" : "#707289",
+    "box_shadow" : "0px 2px 1px #000",
+    "margin_top" : "5px",
+    "margin_bottom" : "5px",
+}
 ## Log Msg [양호]
 st_log_msg_good = {
     "color" : "#00ff00",
@@ -201,8 +225,57 @@ st_btn_stop_off_hover = {
     "bg" :"#000",
 }
 
+## Top Logo Button
+st_btn_logo = {
+    "bg" : "#141723",
+}
+st_btn_logo_hover = {
+    "bg" : "#141723",
+}
+st_btn_setting = {
+    "bg" : "#141723",
+    "padding_left" : "0px",
+    "padding_right" : "0px",
+    "height" : "32px",
+}
+st_btn_setting_hover = {
+    "bg" : "#141723",
+}
+st_btn_exit = {
+    "bg" : "#141723",
+    "padding_left" : "0px",
+    "padding_right" : "0px",
+    "height" : "32px",
+}
+st_btn_exit_hover = {
+    "bg" : "#141723",
+}
+
 ## Menu 
-### Trigger Interval Container > Trigger Interval Box 
+###
+st_menu_container = {
+    "margin_left" : "10px"
+}
+st_menu_box = {
+    "width" :"100%",
+    "margin_top" :"5px",
+}
+
+#st_input_enable
+### Trigger Interval Container > Trigger Interval Box
+st_input_enable_bg                  = "#3D4056"
+st_input_enable_border_color        = "#E3E3E3"
+st_input_enable_error_border_color  = "#FE2C55"
+st_input_enable_focus_border_color  = "#0276F9"
+st_input_disable_bg                  = "#121424"
+st_input_disable_border_color        = "#2E3040"
+st_input_disable_error_border_color  = "#FE2C55"
+st_input_disable_focus_border_color  = "#2E3040"
+st_input_num_width          = "120px"
+st_input_num_height         = "36px"
+st_input_num_align          = "right"
+st_input_num_placeholder    = "0"
+
 st_trigger_interval_container = {
     "bg" : "#1E202F",
     "border_radius" : "4px",
@@ -212,10 +285,53 @@ st_trigger_interval_container = {
     "padding_right" : "16px",
     "width" : "100%",
 }
+st_trigger_interval_sec = {
+    "margin_left" : "8px",
+    "font_size": "13px",
+}
+st_roi_title_box = {
+    "width" : "100%",
+}
+st_roi_title_txt = {
+    "width":"100%",
+    "text_align":"left",
+    "margin_top":"5px",
+}
+st_roi_unit = {
+    "font_size" : "13px",
+    "margin_right" : "10px",
+}
+st_roi_container = {
+    "width": "100%", 
+}
+st_btn_apply = {
+    "color" : "#fff",
+    "bg" : "#F00BBE",
+    "border_radius" : "20px",
+    "margin_top" : "10px",
+    "padding_left" : "50px",
+    "padding_right" : "50px",
+    "height" : "32px",
+}
+st_btn_apply_hover =  {
+    "bg" : "#C00898",
+}
+st_lab_unit = {
+    "font_size" : "13px",
+}
+st_delta_labe_box = {
+    "bg" : "#DEDEDE",
+    "border_radius" : "4px",
+    "color" : "#000",
+    "padding_right" : "5px",
+    "padding_bottom" : "5px",
+}
 
 # Class
 class State(pc.State):
     """The app state."""
+    show: bool = False
+    
     def change(self):
         self.show = not (self.show)
 
@@ -230,10 +346,8 @@ def index() -> pc.Component:
                     #Logo Image button 
                     pc.button( 
                         pc.image(src=img_logo_file_url),
-                        bg="#141723",
-                        _hover = {
-                            "bg" : "#141723",
-                        }                     
+                        style= st_btn_logo,
+                        _hover = st_btn_logo_hover,            
                     ),
                 ),
                 #Top Spacer
@@ -241,7 +355,7 @@ def index() -> pc.Component:
                 #Top Center ( START/STOP Button Group )
                 pc.button_group(
                     pc.button( 
-                        "START",
+                        txt_btn_start,
                         # Start 버튼 비활성화 표시 스타일
                         #style=st_btn_start_off,
                         #_hover=st_btn_sart_off_hover,
@@ -251,7 +365,7 @@ def index() -> pc.Component:
                         _hover=st_btn_start_on_hover,
                     ),
                     pc.button( 
-                        "STOP",
+                        txt_btn_stop,
                         # Stop 버튼 비활성화 표시 스타일
                         style=st_btn_stop_off,
                         _hover=st_btn_stop_off_hover,
@@ -268,23 +382,29 @@ def index() -> pc.Component:
                 pc.button_group(
                    pc.button( 
                         pc.image(src=img_btn_setting_url),
-                        bg="#141723",
-                        padding_left="0px",
-                        padding_right="0px",
-                        height="32px",
-                        _hover = {
-                            "bg" : "#141723",
-                        }    
+                        on_click = State.change,
+                        style=st_btn_setting,
+                        _hover=st_btn_setting_hover,
                     ),
+                   pc.modal(
+                       pc.modal_overlay(
+                            pc.modal_content(
+                                pc.modal_header("설정"),
+                                pc.modal_body(
+                                    "aaaaaaaaaa",
+                                ),
+                                pc.modal_footer(
+                                    pc.button("취소", on_click=State.change),
+                                ),                                
+                            ),
+                        ),
+                       is_open=State.show,
+                    ),
+                   
                    pc.button( 
                         pc.image(src=img_btn_exit_url),
-                        bg="#141723",
-                        padding_left="0px",
-                        padding_right="0px",
-                        height="32px",
-                        _hover = {
-                            "bg" : "#141723",
-                        }    
+                        style=st_btn_exit,
+                        _hover=st_btn_exit_hover,
                     ),
                 ),
                 style=st_top,
@@ -371,19 +491,18 @@ def index() -> pc.Component:
                                 pc.input(
                                     type_="number",
                                     is_required=True,
-                                    placeholder="0",
-                                    border_color ="#E3E3E3",        #Defalut border color
-                                    error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                    focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                    width="120px",
-                                    height="36px",
-                                    bg = "#3D4056", 
-                                    text_align="right",
+                                    placeholder=st_input_num_placeholder,
+                                    border_color = st_input_enable_border_color ,        #Defalut border color
+                                    error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                    focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                    width=st_input_num_width,
+                                    height=st_input_num_height,
+                                    bg=st_input_enable_bg, 
+                                    text_align=st_input_num_align,
                                 ),
                                 pc.text(
-                                    "초",
-                                    margin_left="8px",
-                                    font_size="13px",
+                                    txt_sec,
+                                    style=st_trigger_interval_sec,
                                 ),
                             ),
                             style=st_trigger_interval_container,
@@ -393,124 +512,106 @@ def index() -> pc.Component:
                         pc.vstack(
                             pc.box(
                                 pc.text(
-                                    "검사영역 ROI",
-                                    width="100%",
-                                    text_align="left",
-                                    margin_top="5px",
+                                    txt_roi,
+                                    style=st_roi_title_txt,
+                                ),
+                                style=st_roi_title_box,
+                            ),
+                            pc.flex(
+                                pc.center(
+                                    pc.text(
+                                        txt_x,
+                                        style=st_roi_unit,
+                                    ),
+                                    pc.input(
+                                        type_="number",
+                                        is_required=True,
+                                        placeholder=st_input_num_placeholder,
+                                        border_color = st_input_enable_border_color ,        #Defalut border color
+                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                        width=st_input_num_width,
+                                        height=st_input_num_height,
+                                        bg=st_input_enable_bg, 
+                                        text_align=st_input_num_align,
+                                    ),
+                                    width="50%",
+                                ),
+                                pc.center(
+                                    pc.text(
+                                        txt_w,
+                                        style=st_roi_unit,
+                                    ),
+                                    pc.input(
+                                        type_="number",
+                                        is_required=True,
+                                        placeholder=st_input_num_placeholder,
+                                        border_color = st_input_enable_border_color ,        #Defalut border color
+                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                        width=st_input_num_width,
+                                        height=st_input_num_height,
+                                        bg=st_input_enable_bg, 
+                                        text_align=st_input_num_align,
+                                    ),
+                                    width="50%",
                                 ),
                                 width="100%",
                             ),
                             pc.flex(
                                 pc.center(
                                     pc.text(
-                                        "X",
-                                        font_size="13px",
+                                        txt_y,
+                                        style=st_roi_unit,
                                     ),
                                     pc.input(
                                         type_="number",
                                         is_required=True,
-                                        placeholder="0",
-                                        border_color ="#E3E3E3",        #Defalut border color
-                                        error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                        focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                        width="120px",
-                                        bg = "#3D4056", 
-                                        text_align="right",
-                                        margin_left="10px",
-                                        height="36px",
+                                        placeholder=st_input_num_placeholder,
+                                        border_color = st_input_enable_border_color ,        #Defalut border color
+                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                        width=st_input_num_width,
+                                        height=st_input_num_height,
+                                        bg=st_input_enable_bg, 
+                                        text_align=st_input_num_align,
                                     ),
                                     width="50%",
                                 ),
                                 pc.center(
                                     pc.text(
-                                        "W",
-                                        font_size="13px",
+                                        txt_d,
+                                        style=st_roi_unit,
                                     ),
                                     pc.input(
                                         type_="number",
                                         is_required=True,
-                                        placeholder="0",
-                                        border_color ="#E3E3E3",        #Defalut border color
-                                        error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                        focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                        width="120px",
-                                        bg = "#3D4056", 
-                                        text_align="right",
-                                        margin_left="10px",
-                                        height="36px",
+                                        placeholder=st_input_num_placeholder,
+                                        border_color = st_input_enable_border_color ,        #Defalut border color
+                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                        width=st_input_num_width,
+                                        height=st_input_num_height,
+                                        bg=st_input_enable_bg, 
+                                        text_align=st_input_num_align,
                                     ),
                                     width="50%",
                                 ),
-                                width="100%",
-                            ),
-                            pc.flex(
-                                pc.center(
-                                    pc.text(
-                                        "Y",
-                                        font_size="13px",
-                                    ),
-                                    pc.input(
-                                        type_="number",
-                                        is_required=True,
-                                        placeholder="0",
-                                        border_color ="#E3E3E3",        #Defalut border color
-                                        error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                        focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                        width="120px",
-                                        bg = "#3D4056", 
-                                        text_align="right",
-                                        margin_left="10px",
-                                        height="36px",
-                                    ),
-                                    width="50%",
-                                ),
-                                pc.center(
-                                    pc.text(
-                                        "D",
-                                        font_size="13px",
-                                    ),
-                                    pc.input(
-                                        type_="number",
-                                        is_required=True,
-                                        placeholder="0",
-                                        border_color ="#E3E3E3",        #Defalut border color
-                                        error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                        focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                        width="120px",
-                                        bg = "#3D4056", 
-                                        text_align="right",
-                                        margin_left="10px",
-                                        height="36px",
-                                    ),
-                                    width="50%",
-                                ),
-                                width="100%",
+                                style=st_roi_container,
                             ),
                             pc.center(
                                 pc.button(
-                                    "적용",
-                                    color="#fff",
-                                    bg="#F00BBE",
-                                    border_radius="20px",
-                                    margin_top="10px",
-                                    padding_left="50px",
-                                    padding_right="50px",
-                                    height="32px",
-                                    _hover= {
-                                        "bg" : "#C00898",
-                                    }
+                                    txt_btn_apply,
+                                    style=st_btn_apply,
+                                    _hover=st_btn_apply_hover,
                                 ),
                             ),
-                            width="100%",
-                            margin_top="5px",
+                            style=st_menu_box,
                         ),
                         
                         # 구분선
                         pc.divider( 
-                            border_color="#707289",
-                            box_shadow="0px 2px 1px #000",
-                            margin_top="5px",
-                            margin_bottom="5px",
+                            style=st_divider,
                         ),
                         
                         # CIELab 영역
@@ -518,60 +619,63 @@ def index() -> pc.Component:
                             pc.box(
                                 pc.vstack(
                                     pc.text(
-                                        "이미지 CIELab",
+                                        txt_cielab,
                                     ),
                                     pc.center(
                                         pc.text(
-                                            "L",
-                                            font_size="13px",
+                                            txt_L,
+                                            style=st_lab_unit,
                                         ),
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
-                                        ),
-                                    ),
-                                    pc.center(
-                                        pc.text(
-                                            "a",
-                                            font_size="13px",
-                                        ),
-                                        pc.input(
-                                            type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
-                                            margin_left="5px",
-                                            margin_right="5px",
-                                            height="36px",
                                         ),
                                     ),
                                     pc.center(
                                         pc.text(
-                                            "b",
-                                            font_size="13px",
+                                            txt_a,
+                                            style=st_lab_unit,
                                         ),
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
+                                        ),
+                                    ),
+                                    pc.center(
+                                        pc.text(
+                                           txt_b,
+                                           style=st_lab_unit,
+                                        ),
+                                        pc.input(
+                                            type_="number",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
+                                            margin_left="5px",
+                                            margin_right="5px",
                                         ),
                                     ),
                                 ),
@@ -583,48 +687,51 @@ def index() -> pc.Component:
                             pc.box(
                                 pc.vstack(
                                     pc.text(
-                                        "After Calibration",
+                                        txt_after_calibration,
                                     ),
                                     pc.center(
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
                                         ),
                                     ),
                                     pc.center(
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
                                         ),
                                     ),
                                     pc.center(
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
                                         ),
                                     ),
                                 ),
@@ -635,102 +742,97 @@ def index() -> pc.Component:
                             pc.box(
                                 pc.vstack(
                                     pc.text(
-                                        "Delta LabE",
+                                        txt_delta_labe,
                                     ),
                                     pc.center(
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
                                         ),
                                         pc.text(
-                                            "ΔL",
-                                            font_size="13px",
-                                            font_weight="600",
-                                        ),
-                                    ),
-                                    pc.center(
-                                        pc.input(
-                                            type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
-                                            margin_left="5px",
-                                            margin_right="5px",
-                                            height="36px",
-                                        ),
-                                        pc.text(
-                                            "Δa",
-                                            font_size="13px",
-                                            font_weight="600",
+                                            txt_delta_L,
+                                            style=st_lab_unit,
                                         ),
                                     ),
                                     pc.center(
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
                                         ),
                                         pc.text(
-                                            "Δb",
-                                            font_size="13px",
-                                            font_weight="600",
+                                            txt_delta_a,
+                                            style=st_lab_unit,
                                         ),
                                     ),
                                     pc.center(
                                         pc.input(
                                             type_="number",
-                                            placeholder="0",
-                                            border_color ="#2E3040",        #Defalut border color
-                                            error_border_color="#FE2C55",   #입력이 유효하지 않을때 border color
-                                            focus_border_color="#0276F9",   #포커스가 있을 때 border color
-                                            bg = "#121424", 
-                                            text_align="right",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
                                             margin_left="5px",
                                             margin_right="5px",
-                                            height="36px",
                                         ),
                                         pc.text(
-                                            "ΔE",
-                                            font_size="13px",
-                                            font_weight="600",
+                                            txt_delta_b,
+                                            style=st_lab_unit,
+                                        ),
+                                    ),
+                                    pc.center(
+                                        pc.input(
+                                            type_="number",
+                                            is_read_only=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color =st_input_disable_border_color,        #Defalut border color
+                                            error_border_color=st_input_disable_error_border_color,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_disable_focus_border_color,   #포커스가 있을 때 border color
+                                            bg=st_input_disable_bg, 
+                                            height=st_input_num_height,
+                                            text_align=st_input_num_align,
+                                            margin_left="5px",
+                                            margin_right="5px",
+                                        ),
+                                        pc.text(
+                                            txt_delta_E,
+                                            style=st_lab_unit,
                                         ),
                                     ),
                                 ),
                                 width="35%",
-                                bg="#DEDEDE",
-                                border_radius="4px",
-                                color="#000",
-                                padding_right="5px",
-                                padding_bottom="5px",
+                                style=st_delta_labe_box,
                             ),                            
-                            width="100%",
-                            margin_top="5px",
+                            tyle=st_menu_box,
                         ),
-                        margin_left="10px",
+                        style=st_menu_container,
                     ),
                     col_span=6,     #오른쪽 메뉴영역 6/15
                 ),
                 template_columns="repeat(15, 1fr)",     #Grid: Width를 15단계로 나눔
-                width="100%",
                 gap=0,
+                style=st_contents,
             ),            
             # Bottom Layout
             pc.flex(
