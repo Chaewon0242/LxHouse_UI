@@ -1,0 +1,15 @@
+{
+    "user_input" : {
+        "trigger_interval" : 60,
+        "ref" : [10.0, 20.0, 30.0],
+        "calibration" : [40.0, 50.0, 60.0],
+        "roi" : {
+            "x" : 70,
+            "y" : 80,
+            "w" : 90,
+            "h" : 100
+        },
+        "warning_thres" : [1.0, 2.0, 3.0],
+        "defect_thres" : [4.0, 5.0, 6.0]
+    }
+}
