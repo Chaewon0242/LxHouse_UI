@@ -13,7 +13,8 @@ filename = f"{config.app_name}/{config.app_name}.py"
 img_logo_file_url           = "iprism_logo_st1.png"
 img_btn_exit_url            = "btn_exit_32.png"
 img_btn_setting_url         = "btn_setting_32.png"
-img_inspection_ready_url    = "inspection_ready_st1.png"
+#img_inspection_ready_url    = "inspection_ready_st1.png"
+img_inspection_ready_url    = "img_sample_900x720.png"
 img_indi_camera_on          = "ico_camera_on_64.png"
 img_indi_camera_off         = "ico_camera_off_64.png"
 img_indi_plc_on             = "ico_plc_on_64.png"
@@ -40,6 +41,7 @@ txt_d                   = "D"
 txt_L                   = "L"
 txt_a                   = "a"
 txt_b                   = "b"
+txt_E                   = "E"
 txt_delta_L             = "ΔL"
 txt_delta_a             = "Δa"
 txt_delta_b             = "Δb"
@@ -48,6 +50,15 @@ txt_btn_apply           = "적용"
 txt_cielab              = "이미지 CIELab"
 txt_after_calibration   = "After Calibration"
 txt_delta_labe          = "Delta LabE"
+txt_setting             = "설정"
+txt_cancel              = "취소"
+txt_apply               = "적용"
+txt_empty               = ""
+txt_default             = "Default"
+txt_calibration         = "Calibration"
+txt_delta_warning       = "Δ경고"
+txt_delta_bad           = "Δ불량"
+
 
 # Main Style
 ## initialization
@@ -160,6 +171,10 @@ st_img_box = {
     "height" : "100%",
     "bg" : "#3D4056",
 }
+st_inspection_img = {
+    "width":"auto",
+    "height":"100%",
+}
 
 ## Indicator Container > Indicator box > Indicator Item
 st_indi_container = {
@@ -184,6 +199,18 @@ st_indi_item_off = {
 }
 
 ## START / STOP Button Style
+st_btn_start = {
+    "color" : "#fff",
+    "border_radius" : "4px",
+    "width" : "160px",
+    "height" : "36px",
+}
+st_btn_stop = {
+    "color" : "#fff",
+    "border_radius" : "4px",
+    "width" : "160px",
+    "height" : "36px",
+}
 st_btn_start_on = {
     "color" : "#fff",
     "bg" : "#12C365",
@@ -252,7 +279,7 @@ st_btn_exit_hover = {
 }
 
 ## Menu 
-###
+## Menu Style
 st_menu_container = {
     "margin_left" : "10px"
 }
@@ -275,6 +302,8 @@ st_input_num_width          = "120px"
 st_input_num_height         = "36px"
 st_input_num_align          = "right"
 st_input_num_placeholder    = "0"
+st_input_num_color_blue     = "#0276F9"
+st_setting_input_num_width  = "90px"
 
 st_trigger_interval_container = {
     "bg" : "#1E202F",
@@ -327,15 +356,160 @@ st_delta_labe_box = {
     "padding_bottom" : "5px",
 }
 
+# Setting User Input Table
+st_setting_user_input_table_container = {
+    "color" : "#000",
+    "width" : "100%",
+}
+st_setting_user_input_table = {
+    "width" : "100%",
+    "border" : "1px",
+    "border_radius" : "4px",
+    "border_color" : "#9EAFC5",
+    "padding_bottom" : "10px",
+}
+st_setting_btn_apply = {
+    "bg" : "#f00bbe",
+    "color" : "#fff",
+    "font_size" : "15px",
+    "padding_left" : "30px",
+    "padding_right" : "30px",
+}
+st_setting_btn_apply_hover = {
+    "bg" : "#C00898",
+}
+st_setting_btn_cancel = {
+    "bg" : "#EDF2F7",
+    "color" : "#3D4056",
+    "font_size" : "15px",
+    "padding_left" : "30px",
+    "padding_right": "30px",
+}
+st_setting_btn_cancel_hover = {
+    "bg" : "#cad1db",
+}
+st_setting_user_input_table_thead ={
+    "width" : "100%",
+    "bg":  "#F9FAFB",
+    "border_top_left_radius" : "4px",
+    "border_top_right_radius" : "4px",
+    "font_weight" : "600",
+    "color" : "#3D4056",
+    "margin_bottom" : "10px",
+    "border_bottom" : "1px solid #9EAFC5",
+}
+st_setting_user_input_table_th = {
+    "height" : "50px",
+    "width" : "16%",
+}
+st_setting_user_input_table_tr = {
+    "padding_left" : "10px",
+    "padding_right" : "10px",
+    "width" : "100%",
+}
+st_setting_user_input_table_td = {
+    "height" : "50px",
+    "width" : "21%",
+
+}
+
+
+
 # Class
 class State(pc.State):
     """The app state."""
-    show: bool = False
+    setting_show: bool  = False
+    is_start: bool      = False
     
-    def change(self):
-        self.show = not (self.show)
+    btn_start_disabled     = False
+    btn_stop_disabled      = False
+     
+    btn_start_on_bg         = "#12C365"
+    btn_start_on_hover_bg   = "#079d4e"
+    btn_stop_on_bg          = "#fe2c55"
+    btn_stop_on_hover_bg    = "#c91236"
+    btn_start_off_bg         = "#02071a"
+    btn_start_off_hover_bg   = "#000"
+    btn_stop_off_bg          = "#02071a"
+    btn_stop_off_hover_bg    = "#000"
 
+    btn_start_bg: str       = btn_start_on_bg
+    btn_start_hover_bg: str = btn_start_on_hover_bg
+    btn_stop_bg: str        = btn_stop_off_bg
+    btn_stop_hover_bg: str  = btn_stop_off_hover_bg
+    
+    # def __init__(self):
+    #     self._trigger_interval = ""
+    #     self._x = ""
+    #     self._y = ""
+    #     self._w = ""
+    #     self._h = ""
+        
+        
+    # [경로열기] 버튼 클릭 이벤트 
+    def Click_CurFileOpen(self):
+        print ("Current File Open Click")
+    
+    # Exit 버튼 클릭 이벤트(프로그램 종료 버튼 이벤트)
+    def Click_Exit(self):
+        print ("Exit Click")
+    
+    # 상단의 [Start] 버튼 클릭 이벤트
+    def Click_Start(self):
+        print ("Start Click")
+        if self.is_start is False :
+            print ("->Start Flag is False")
+            self.btn_start_bg        = self.btn_start_off_bg
+            self.btn_start_hover_bg  = self.btn_start_off_hover_bg
+            self.btn_stop_bg         = self.btn_stop_on_bg
+            self.btn_stop_hover_bg   = self.btn_stop_on_hover_bg
+            
+            self.is_start = True
+        else :
+            print ("->Start Flag is True")
+        
+    # 상단의 [Stop] 버튼 클릭 이벤트
+    def Click_Stop(self):
+        print ("Stop Click")
+        if self.is_start is True :
+            print ("->Start Flag is True")
+            self.btn_start_bg        = self.btn_start_on_bg
+            self.btn_start_hover_bg  = self.btn_start_on_hover_bg
+            self.btn_stop_bg         = self.btn_stop_off_bg
+            self.btn_stop_hover_bg   = self.btn_stop_off_hover_bg
+            
+            self.is_start = False
+        else :
+            print ("->Start Flag is False")
+    
+    # Setting 버튼 클릭 이벤트
+    def Click_Setting(self):
+        print ("Setting Modal Open")
+        self.setting_show = not (self.setting_show)
+    
+    # Setting 모달창 취소 버튼 클릭 이벤트
+    def Click_SettingCancel(self):
+        print ("Setting Modal Close")
+        self.setting_show = not (self.setting_show)
 
+    # Setting 모달창 적용 버튼 클릭 이벤트
+    def Click_SettingApply(self, form_data: dict):
+        print ("Setting - Apply Button Click")
+        print (form_data)
+        #print (form_data['trigger_interval'])
+        self.form_data = form_data
+        
+    # def Click_SettingApply(self, form_data: dict):
+    #     print ("Setting Apply")
+    #     self.user_input_form_data = form_data
+    
+    # 적용 버튼 이벤트 (User Input Form data)
+    def Click_UserInputApply(self, form_data: dict):
+        print ("Apply Button Click")
+        print (form_data)
+        print (form_data['trigger_interval'])
+        self.form_data = form_data
+        
 #index Start ->
 def index() -> pc.Component:
      return pc.vstack(
@@ -343,7 +517,7 @@ def index() -> pc.Component:
             pc.flex(
                 #Top Left Layout (Logo)
                 pc.button_group(
-                    #Logo Image button 
+                    #아이프리즘 Logo Image button
                     pc.button( 
                         pc.image(src=img_logo_file_url),
                         style= st_btn_logo,
@@ -354,21 +528,37 @@ def index() -> pc.Component:
                 pc.spacer(),
                 #Top Center ( START/STOP Button Group )
                 pc.button_group(
+                    #[Start] 버튼
                     pc.button( 
                         txt_btn_start,
+                        style=st_btn_start,
+                        bg=State.btn_start_bg,
+                        _hover={
+                            "bg" : State.btn_start_hover_bg,
+                        },
+                        on_click=State.Click_Start,
                         # Start 버튼 비활성화 표시 스타일
                         #style=st_btn_start_off,
                         #_hover=st_btn_sart_off_hover,
                         
                         # Start 버튼 활성화 표시 스타일
-                        style=st_btn_start_on,
-                        _hover=st_btn_start_on_hover,
+                        #style=st_btn_start_on,
+                        #_hover=st_btn_start_on_hover,
                     ),
+                    #[Stop] 버튼
                     pc.button( 
                         txt_btn_stop,
+                        style=st_btn_stop,
+                        bg=State.btn_stop_bg,
+                        _hover={
+                            "bg" : State.btn_stop_hover_bg,
+                        },
+                        on_click=State.Click_Stop,
+                        #_hover=st_btn_stop_hover,
+                        
                         # Stop 버튼 비활성화 표시 스타일
-                        style=st_btn_stop_off,
-                        _hover=st_btn_stop_off_hover,
+                        #style=st_btn_stop_off,
+                        #_hover=st_btn_stop_off_hover,
                         
                         # Stop 버튼 활성화 표시 스타일
                         #style=st_btn_stop_on,
@@ -380,29 +570,431 @@ def index() -> pc.Component:
                 pc.spacer(),
                 #Top Right (Button)
                 pc.button_group(
-                   pc.button( 
+                    # [Setting] 버튼
+                    pc.button( 
                         pc.image(src=img_btn_setting_url),
-                        on_click = State.change,
+                        on_click = State.Click_Setting,  #클릭 이벤트 처리
                         style=st_btn_setting,
                         _hover=st_btn_setting_hover,
                     ),
-                   pc.modal(
+                    # [Setting] 버튼 클릭 시 모달창 Open
+                    pc.modal(
                        pc.modal_overlay(
+                           pc.form(
+                            # Modal Content Start -->
                             pc.modal_content(
-                                pc.modal_header("설정"),
-                                pc.modal_body(
-                                    "aaaaaaaaaa",
+                                #모달창 헤더 (타이틀)
+                                pc.modal_header(
+                                    txt_setting,
+                                    color="#000",
                                 ),
+                                #모달창 바디 (내용)
+                                pc.modal_body(
+                                    # User Input Table Container
+                                    # # User Input Form Start ->
+                                    # pc.form(
+                                        pc.vstack(
+                                            # User Input Row (Thead)
+                                            pc.flex(
+                                                # User Input Cols
+                                                pc.center(
+                                                    txt_empty,
+                                                    style=st_setting_user_input_table_th,
+                                                ),
+                                                pc.center(
+                                                    txt_default,
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    txt_calibration,
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    txt_delta_warning,
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    txt_delta_bad,
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                style=st_setting_user_input_table_thead,
+                                            ),
+                                            #User Input Row-1
+                                            pc.flex(
+                                                #User Input Cols
+                                                pc.center(
+                                                    pc.text(
+                                                        txt_L,
+                                                        width="100%",
+                                                        text_align="left",
+                                                        font_weight="600",
+                                                        padding_left="30px",
+                                                    ),
+                                                    style=st_setting_user_input_table_th, 
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="default_L",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="calibration_L",
+                                                        type_="number",
+                                                        is_required=True,   #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_warning_L",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_bad_L",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                style=st_setting_user_input_table_tr,
+                                            ),
+                                            pc.flex(
+                                                #User Input Cols
+                                                pc.center(
+                                                    pc.text(
+                                                        txt_a,
+                                                        width="100%",
+                                                        text_align="left",
+                                                        font_weight="600",
+                                                        padding_left="30px",
+                                                    ),
+                                                    style=st_setting_user_input_table_th,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="default_a",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="calibration_a",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_warning_a",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_bad_a",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                style=st_setting_user_input_table_tr,
+                                            ),
+                                            pc.flex(
+                                                #User Input Cols
+                                                pc.center(
+                                                    pc.text(
+                                                        txt_b,
+                                                        width="100%",
+                                                        text_align="left",
+                                                        font_weight="600",
+                                                        padding_left="30px",
+                                                    ),
+                                                    style=st_setting_user_input_table_th, 
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="default_b",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="calibration_b",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td, 
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_warning_b",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_bad_b",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                style=st_setting_user_input_table_tr,
+                                            ),
+                                            pc.flex(
+                                                #User Input Cols
+                                                pc.center(
+                                                    pc.text(
+                                                        txt_E,
+                                                        width="100%",
+                                                        text_align="left",
+                                                        font_weight="600",
+                                                        padding_left="30px",
+                                                    ),
+                                                    style=st_setting_user_input_table_th, 
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="default_E",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td, 
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="calibration_E",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_warning_E",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                pc.center(
+                                                    pc.input(
+                                                        id="delta_bad_E",
+                                                        type_="number",
+                                                        is_required=True,    #필수입력인경우 True
+                                                        placeholder=st_input_num_placeholder,
+                                                        height=st_input_num_height,
+                                                        text_align=st_input_num_align,
+                                                        color=st_input_num_color_blue,
+                                                        border_color=st_input_num_color_blue,
+                                                        width=st_setting_input_num_width,
+                                                        _hover= {
+                                                            "border_color" : st_input_num_color_blue,
+                                                        }
+                                                    ),
+                                                    style=st_setting_user_input_table_td,
+                                                ),
+                                                style=st_setting_user_input_table_tr,
+                                            ),
+                                            style=st_setting_user_input_table,
+                                            gap=0,
+                                        ),
+                                        style=st_setting_user_input_table_container,
+                                    # ),
+                                    # # User Input Form End <-
+                                ),
+                                #모달창 푸터 (버튼영역)
                                 pc.modal_footer(
-                                    pc.button("취소", on_click=State.change),
+                                    pc.flex(
+                                        # [적용] 버튼
+                                        pc.box(
+                                            pc.button(
+                                                txt_apply,
+                                                type_="submit",
+                                                #on_click=State.Click_SettingApply,
+                                                style=st_setting_btn_apply,
+                                                _hover=st_setting_btn_apply_hover,
+                                            ),
+                                        ),
+                                        pc.spacer(),
+                                        # [취소] 버튼
+                                        pc.box(
+                                            pc.button(
+                                                txt_cancel, 
+                                                on_click=State.Click_SettingCancel,
+                                                style=st_setting_btn_cancel,
+                                                _hover=st_setting_btn_cancel_hover,
+                                            ),
+                                        ),
+                                        width="100%",
+                                    ),
                                 ),                                
                             ),
+                            # Modal Content End <--
+                            on_submit=State.Click_SettingApply,
+                           ),
                         ),
-                       is_open=State.show,
+                       is_open=State.setting_show,
+                       size="xl",
                     ),
-                   
-                   pc.button( 
+                    #[종료] 버튼 
+                        ## 프로그램 종료가 빈도는 적겠지만 필요하다고 느낌.
+                        ## 프로그램 종료할일이 없다면 주석처리 해도 됩니다.
+                    pc.button( 
                         pc.image(src=img_btn_exit_url),
+                        on_click = State.Click_Exit,
                         style=st_btn_exit,
                         _hover=st_btn_exit_hover,
                     ),
@@ -451,8 +1043,11 @@ def index() -> pc.Component:
                             #Image Box
                             pc.center(
                                 #Image
-                                pc.image(src=img_inspection_ready_url),
-                                style=st_img_box,
+                                pc.image(
+                                    src=img_inspection_ready_url,
+                                    style=st_inspection_img,
+                                ),
+                                style=st_img_box,                    
                             ),
                             style=st_img_container,
                         ),
@@ -478,52 +1073,18 @@ def index() -> pc.Component:
                         #     border_color="#707289",
                         #     box_shadow="0px 2px 1px #000",
                         # ),
-                        
-                        # Trigger Interval 영역
-                        pc.flex(
-                            pc.center(
-                                pc.text(
-                                    txt_trigger_interval,
-                                ),
-                            ),
-                            pc.spacer(),
-                            pc.center(
-                                pc.input(
-                                    type_="number",
-                                    is_required=True,
-                                    placeholder=st_input_num_placeholder,
-                                    border_color = st_input_enable_border_color ,        #Defalut border color
-                                    error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
-                                    focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
-                                    width=st_input_num_width,
-                                    height=st_input_num_height,
-                                    bg=st_input_enable_bg, 
-                                    text_align=st_input_num_align,
-                                ),
-                                pc.text(
-                                    txt_sec,
-                                    style=st_trigger_interval_sec,
-                                ),
-                            ),
-                            style=st_trigger_interval_container,
-                        ),
-                        
-                        # 검사영역(ROI)
-                        pc.vstack(
-                            pc.box(
-                                pc.text(
-                                    txt_roi,
-                                    style=st_roi_title_txt,
-                                ),
-                                style=st_roi_title_box,
-                            ),
+                        pc.form(
+                            # Trigger Interval 영역
                             pc.flex(
                                 pc.center(
                                     pc.text(
-                                        txt_x,
-                                        style=st_roi_unit,
+                                        txt_trigger_interval,
                                     ),
+                                ),
+                                pc.spacer(),
+                                pc.center(
                                     pc.input(
+                                        id="trigger_interval",
                                         type_="number",
                                         is_required=True,
                                         placeholder=st_input_num_placeholder,
@@ -535,79 +1096,121 @@ def index() -> pc.Component:
                                         bg=st_input_enable_bg, 
                                         text_align=st_input_num_align,
                                     ),
-                                    width="50%",
+                                    pc.text(
+                                        txt_sec,
+                                        style=st_trigger_interval_sec,
+                                    ),
+                                ),
+                                style=st_trigger_interval_container,
+                            ),
+                            # 검사영역(ROI)
+                            pc.vstack(
+                                pc.box(
+                                    pc.text(
+                                        txt_roi,
+                                        style=st_roi_title_txt,
+                                    ),
+                                    style=st_roi_title_box,
+                                ),
+                                pc.flex(
+                                    pc.center(
+                                        pc.text(
+                                            txt_x,
+                                            style=st_roi_unit,
+                                        ),
+                                        pc.input(
+                                            id="x",
+                                            type_="number",
+                                            is_required=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color = st_input_enable_border_color ,        #Defalut border color
+                                            error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                            width=st_input_num_width,
+                                            height=st_input_num_height,
+                                            bg=st_input_enable_bg, 
+                                            text_align=st_input_num_align,
+                                        ),
+                                        width="50%",
+                                    ),
+                                    pc.center(
+                                        pc.text(
+                                            txt_w,
+                                            style=st_roi_unit,
+                                        ),
+                                        pc.input(
+                                            id="w",
+                                            type_="number",
+                                            is_required=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color = st_input_enable_border_color ,        #Defalut border color
+                                            error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                            width=st_input_num_width,
+                                            height=st_input_num_height,
+                                            bg=st_input_enable_bg, 
+                                            text_align=st_input_num_align,
+                                        ),
+                                        width="50%",
+                                    ),
+                                    width="100%",
+                                ),
+                                pc.flex(
+                                    pc.center(
+                                        pc.text(
+                                            txt_y,
+                                            style=st_roi_unit,
+                                        ),
+                                        pc.input(
+                                            id="y",
+                                            type_="number",
+                                            is_required=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color = st_input_enable_border_color ,        #Defalut border color
+                                            error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                            width=st_input_num_width,
+                                            height=st_input_num_height,
+                                            bg=st_input_enable_bg, 
+                                            text_align=st_input_num_align,
+                                        ),
+                                        width="50%",
+                                    ),
+                                    pc.center(
+                                        pc.text(
+                                            txt_d,
+                                            style=st_roi_unit,
+                                        ),
+                                        pc.input(
+                                            id="d",
+                                            type_="number",
+                                            is_required=True,
+                                            placeholder=st_input_num_placeholder,
+                                            border_color = st_input_enable_border_color ,        #Defalut border color
+                                            error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
+                                            focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
+                                            width=st_input_num_width,
+                                            height=st_input_num_height,
+                                            bg=st_input_enable_bg, 
+                                            text_align=st_input_num_align,
+                                        ),
+                                        width="50%",
+                                    ),
+                                    style=st_roi_container,
                                 ),
                                 pc.center(
-                                    pc.text(
-                                        txt_w,
-                                        style=st_roi_unit,
+                                    pc.button(
+                                        txt_btn_apply,
+                                        type_="submit",
+                                        style=st_btn_apply,
+                                        _hover=st_btn_apply_hover,
                                     ),
-                                    pc.input(
-                                        type_="number",
-                                        is_required=True,
-                                        placeholder=st_input_num_placeholder,
-                                        border_color = st_input_enable_border_color ,        #Defalut border color
-                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
-                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
-                                        width=st_input_num_width,
-                                        height=st_input_num_height,
-                                        bg=st_input_enable_bg, 
-                                        text_align=st_input_num_align,
-                                    ),
-                                    width="50%",
                                 ),
-                                width="100%",
+                                style=st_menu_box,
                             ),
-                            pc.flex(
-                                pc.center(
-                                    pc.text(
-                                        txt_y,
-                                        style=st_roi_unit,
-                                    ),
-                                    pc.input(
-                                        type_="number",
-                                        is_required=True,
-                                        placeholder=st_input_num_placeholder,
-                                        border_color = st_input_enable_border_color ,        #Defalut border color
-                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
-                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
-                                        width=st_input_num_width,
-                                        height=st_input_num_height,
-                                        bg=st_input_enable_bg, 
-                                        text_align=st_input_num_align,
-                                    ),
-                                    width="50%",
-                                ),
-                                pc.center(
-                                    pc.text(
-                                        txt_d,
-                                        style=st_roi_unit,
-                                    ),
-                                    pc.input(
-                                        type_="number",
-                                        is_required=True,
-                                        placeholder=st_input_num_placeholder,
-                                        border_color = st_input_enable_border_color ,        #Defalut border color
-                                        error_border_color=st_input_enable_error_border_color ,   #입력이 유효하지 않을때 border color
-                                        focus_border_color=st_input_enable_focus_border_color ,   #포커스가 있을 때 border color
-                                        width=st_input_num_width,
-                                        height=st_input_num_height,
-                                        bg=st_input_enable_bg, 
-                                        text_align=st_input_num_align,
-                                    ),
-                                    width="50%",
-                                ),
-                                style=st_roi_container,
-                            ),
-                            pc.center(
-                                pc.button(
-                                    txt_btn_apply,
-                                    style=st_btn_apply,
-                                    _hover=st_btn_apply_hover,
-                                ),
-                            ),
-                            style=st_menu_box,
-                        ),
+                            width="100%",
+                            on_submit = State.Click_UserInputApply,
+                        ),  #pc.form end
                         
                         # 구분선
                         pc.divider( 
@@ -636,6 +1239,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -655,6 +1261,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -674,6 +1283,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -700,6 +1312,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -715,6 +1330,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -730,6 +1348,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -755,6 +1376,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -774,6 +1398,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -793,6 +1420,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -812,6 +1442,9 @@ def index() -> pc.Component:
                                             bg=st_input_disable_bg, 
                                             height=st_input_num_height,
                                             text_align=st_input_num_align,
+                                            _hover = {
+                                                "border_color" : st_input_disable_border_color,
+                                            },
                                             margin_left="5px",
                                             margin_right="5px",
                                         ),
@@ -850,9 +1483,11 @@ def index() -> pc.Component:
                             ),
                             pc.spacer(),
                             pc.center(
+                                # [경로 열기] 버튼
                                 pc.button(
                                     txt_btn_cur_file,
                                     type_="submit",
+                                    on_click= State.Click_CurFileOpen,
                                     style=st_btn_cur_file,
                                     _hover =  st_btn_cur_file_hover,
                                 ),
